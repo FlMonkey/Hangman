@@ -14,6 +14,13 @@ score.penup()
 score.hideturtle()
 score.forward(250)
 guessl = []
+usedlets = ("")
+hiddenusedlets = ("")
+
+usedletters = turtle.Turtle()
+usedletters.penup()
+usedletters.hideturtle()
+usedletters.forward(-300)
 
 print("************Welcome to hangman, you have 6 chances to guess the word************")
 
@@ -86,15 +93,18 @@ def drawbody(bpart):
         turtle.penup()
         turtle.home()
         turtle.backward(55)
+        turtle.right(90)
+        turtle.forward(150)
+        turtle.left(90)
         turtle.pendown()
         turtle.pencolor("red")
-        turtle.write("You lose", font=("Arial", 30, "normal"))
+        turtle.write("You Lose", font=("Arial", 30, "normal"))
         time.sleep(1.5)
 
 
 # realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
 def makeguess(realword, setup, guess):
-      # makes a list of the guess
+    # makes a list of the guess
     global guessl
     newguessl = []
     realwordlist = [i for i in realword]  # makes a list of 'realword'
@@ -110,7 +120,7 @@ def makeguess(realword, setup, guess):
             else:
                 newguessl.append("-")
         guessl = newguessl
-        score.write(stringconvert(guessl), font=("Verdana",20, "normal"))
+        score.write(stringconvert(guessl), font=("Verdana", 20, "normal"))
 
 
 def stringconvert(word):
@@ -138,13 +148,14 @@ def input_box(prompt, default=None):
 
 
 def game():
-
+    global hiddenusedlets
     # sets up the game
-
+    usedletters.clear()
     turtle.reset()
     turtle.clearscreen()
     setup()
     lives = 6
+    global usedlets
 
     # makes list with word
     finalword = []
@@ -157,29 +168,45 @@ def game():
     # makes the blank word
     blank = makeguess(guessword, True, None)
 
-    score.write(blank)
-
     # Asks for input for first letter
     while finalword:
 
         pinput = input_box("Enter a letter", "")
 
         print(pinput)
+        print(finalword)
+        if str(pinput) in str(finalword):
 
-        if pinput in finalword:
-            finalword.remove(pinput)
+            for i in range(len(finalword)):
+                if pinput in finalword:
+                    finalword.remove(pinput)
+
+            hiddenusedlets = hiddenusedlets + (pinput + ", ")
             makeguess(guessword, False, pinput)
 
             if not finalword:
                 turtle.penup()
                 turtle.home()
                 turtle.backward(55)
+                turtle.right(90)
+                turtle.forward(150)
+                turtle.left(90)
                 turtle.pendown()
                 turtle.pencolor("green")
                 turtle.write("You win", font=("Arial", 30, "normal"))
                 time.sleep(1.5)
                 game()
+        
+        elif pinput in hiddenusedlets:
+            usedletters.clear()
+            usedletters.write("You have already\n used that letter", font=(
+                "Verdana", 20, "normal"))
+            time.sleep(1.5)
+            usedletters.clear()
+            usedletters.write(usedlets, font=("Verdana", 20, "normal"))
 
+        
+        
         else:
             lives -= 1
             if lives == 0:
@@ -187,6 +214,9 @@ def game():
                 game()
             else:
                 drawbody(lives)
+                usedlets = usedlets + (pinput + ", ")
+                hiddenusedlets = hiddenusedlets + (pinput + ", ")
+                usedletters.write(usedlets, font=("Verdana", 20, "normal"))
                 # draw hangman
 
 
