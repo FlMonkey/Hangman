@@ -175,10 +175,10 @@ def game():
 
         print(pinput)
         print(finalword)
-        if str(pinput) in str(finalword):
+        if pinput in stringconvert(finalword):
 
             for i in range(len(finalword)):
-                if pinput in finalword:
+                if pinput in stringconvert(finalword):
                     finalword.remove(pinput)
 
             hiddenusedlets = hiddenusedlets + (pinput + ", ")
