@@ -9,6 +9,8 @@ import customtkinter as Ctk
 screen = turtle.Screen()
 screen.setup(1000, 500, startx=0, starty=0)
 screen.bgcolor("white")
+
+
 turtle.speed(0)
 score = turtle.Turtle()
 score.penup()
@@ -138,8 +140,6 @@ def input_box(prompt, default=None):
     root.geometry("200x200")
     root.anchor("center")
 
-    frame = Ctk.CTkFrame(root)
-
     input = Ctk.CTkInputDialog(
         text=prompt, title=prompt)
 
@@ -197,7 +197,7 @@ def game():
                 turtle.write("You win", font=("Arial", 30, "normal"))
                 time.sleep(1.5)
                 game()
-        
+
         elif pinput in hiddenusedlets:
             usedletters.clear()
             usedletters.write("You have already\n used that letter", font=(
@@ -206,8 +206,6 @@ def game():
             usedletters.clear()
             usedletters.write(usedlets, font=("Verdana", 20, "normal"))
 
-        
-        
         else:
             lives -= 1
             if lives == 0:
@@ -224,4 +222,3 @@ def game():
 game()
 
 # draw the hangman
-
