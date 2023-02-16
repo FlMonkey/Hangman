@@ -114,11 +114,22 @@ def makeguess(realword, setup, guess):
             guessl.append("-")
             return stringconvert(guessl)
     if setup == False:
-        for i in realwordlist:
-            if guess == i or i in guessl != "-":
-                newguessl.append(i)
-            else:
+        
+        if guess in realwordlist and len(guess) > 1:
+            thing = realwordlist.find(guess)
+            for i in range(0, thing - 1):
                 newguessl.append("-")
+            newguessl.append(guess)
+            for i in range(len(guess)+thing-1, len(realword)):
+                newguessl.append("-")
+                
+        elif len(guess) == 1:
+            for i in realwordlist:
+                if guess == i or i in guessl != "-":
+                    newguessl.append(i)
+                
+                else:
+                    newguessl.append("-")
         guessl = newguessl
         score.write(stringconvert(guessl), font=("Verdana", 20, "normal"))
 
