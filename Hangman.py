@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # initialise the program
 import turtle
@@ -222,3 +223,5 @@ def game():
 game()
 
 # draw the hangman
+=======
+>>>>>>> parent of 73b1ec4 (Update Hangman.py)
