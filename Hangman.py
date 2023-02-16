@@ -2,7 +2,12 @@
 import turtle
 import random
 import time
+import customtkinter as Ctk
 
+
+screen = turtle.Screen()
+screen.setup(1000, 500, startx=0, starty=0)
+screen.bgcolor("white")
 turtle.speed(0)
 score = turtle.Turtle()
 
@@ -19,13 +24,14 @@ def makeword():
         if len(x) > 3 and len(x) <= 6:
             print(x)
             return (x)
-        
+
+
 def setup():
     turtle.hideturtle()
     turtle.speed(0)
     turtle.pensize(5)
     turtle.pencolor("blue")
-    #draws hanging station
+    # draws hanging station
     turtle.penup()
     turtle.backward(200)
     turtle.right(90)
@@ -41,33 +47,34 @@ def setup():
     turtle.right(90)
     turtle.forward(30)
 
+
 def drawbody(bpart):
-    if bpart == 5: # head
+    if bpart == 5:  # head
         turtle.right(90)
         turtle.circle(20)
         turtle.left(90)
         turtle.penup()
         turtle.forward(40)
         turtle.pendown()
-    if bpart == 4: # body
+    if bpart == 4:  # body
         turtle.forward(100)
-    if bpart == 3: # left leg
+    if bpart == 3:  # left leg
         turtle.left(45)
         turtle.forward(60)
         turtle.backward(60)
         turtle.right(45)
-    if bpart == 2: # right leg
+    if bpart == 2:  # right leg
         turtle.right(45)
         turtle.forward(60)
         turtle.backward(60)
         turtle.left(45)
-    if bpart == 1:# left arm
+    if bpart == 1:  # left arm
         turtle.backward(75)
         turtle.left(75)
         turtle.forward(60)
         turtle.backward(60)
         turtle.right(75)
-    if bpart == 0: # right arm
+    if bpart == 0:  # right arm
         turtle.right(75)
         turtle.forward(60)
         turtle.backward(60)
@@ -79,12 +86,14 @@ def drawbody(bpart):
         turtle.pencolor("red")
         turtle.write("You lose", font=("Arial", 30, "normal"))
         time.sleep(1.5)
-    
-def makeguess(realword, setup, guess):  #realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
-    guessl = [] # makes a list of the guess
+
+
+# realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
+def makeguess(realword, setup, guess):
+    guessl = []  # makes a list of the guess
 
     realwordlist = [i for i in realword]  # makes a list of 'realword'
-    if setup == True: 
+    if setup == True:
         for i in range(0, len(realword)):
             guessl.append("-")
             return stringconvert(guessl)
@@ -95,30 +104,40 @@ def makeguess(realword, setup, guess):  #realword needs to be a string, setup is
             else:
                 guessl.append("-")
         score.write(stringconvert(realwordlist))
-            
+
+
 def stringconvert(word):
     fword = ""
     for i in word:
         fword += i
     return fword
 
-def personinput():
-    pinput = str(turtle.textinput("Hangman", "Enter a letter: "))
-    if pinput == "" or None:
-        personinput()
-    else:
-        return pinput
-    
-def game():
-    
-    # sets up the game
 
+def input_box(prompt, default=None):
+    # create a tkinter window
+    root = Ctk.CTk()
+
+    root.geometry("200x200")
+    root.anchor("center")
+
+    frame = Ctk.CTkFrame(root)
+
+    input = Ctk.CTkInputDialog(
+        text=prompt, title=prompt)
+
+    return input.get_input()
+
+    root.mainloop()
+
+
+def game():
+
+    # sets up the game
 
     turtle.reset()
     turtle.clearscreen()
     setup()
     lives = 6
-
 
     # makes list with word
     finalword = []
@@ -127,23 +146,23 @@ def game():
     for i in makeword():
         finalword.append(i)
         guessword = guessword + (i)
-    
-
 
     # makes the blank word
     blank = makeguess(guessword, True, None)
-    
-    score.write(blank) 
-    
+
+    score.write(blank)
+
     # Asks for input for first letter
     while finalword:
-        
-        pinput = personinput()
-        
+
+        pinput = input_box("Enter a letter", "")
+
+        print(pinput)
+
         if pinput in finalword:
             finalword.remove(pinput)
             makeguess(guessword, False, pinput)
-            
+
             if not finalword:
                 turtle.penup()
                 turtle.home()
@@ -153,7 +172,7 @@ def game():
                 turtle.write("You win", font=("Arial", 30, "normal"))
                 time.sleep(1.5)
                 game()
-            
+
         else:
             lives -= 1
             if lives == 0:
