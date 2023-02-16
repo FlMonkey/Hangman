@@ -10,6 +10,10 @@ screen.setup(1000, 500, startx=0, starty=0)
 screen.bgcolor("white")
 turtle.speed(0)
 score = turtle.Turtle()
+score.penup()
+score.hideturtle()
+score.forward(250)
+guessl = []
 
 print("************Welcome to hangman, you have 6 chances to guess the word************")
 
@@ -90,20 +94,23 @@ def drawbody(bpart):
 
 # realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
 def makeguess(realword, setup, guess):
-    guessl = []  # makes a list of the guess
-
+      # makes a list of the guess
+    global guessl
+    newguessl = []
     realwordlist = [i for i in realword]  # makes a list of 'realword'
+    score.clear()
     if setup == True:
         for i in range(0, len(realword)):
             guessl.append("-")
             return stringconvert(guessl)
     if setup == False:
         for i in realwordlist:
-            if guess == i:
-                guessl.append(i)
+            if guess == i or i in guessl != "-":
+                newguessl.append(i)
             else:
-                guessl.append("-")
-        score.write(stringconvert(realwordlist))
+                newguessl.append("-")
+        guessl = newguessl
+        score.write(stringconvert(guessl), font=("Verdana",20, "normal"))
 
 
 def stringconvert(word):
