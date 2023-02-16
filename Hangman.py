@@ -4,11 +4,11 @@ import random
 import time
 
 turtle.speed(0)
-done = False
+score = turtle.Turtle()
 
 print("************Welcome to hangman, you have 6 chances to guess the word************")
 
-with open("/Users/raphaelbialystok-joly/Documents/Code/Python/Hangman/words.txt", "r") as file:
+with open("words.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
 
@@ -20,8 +20,6 @@ def makeword():
             print(x)
             return (x)
         
-
-
 def setup():
     turtle.hideturtle()
     turtle.speed(0)
@@ -81,16 +79,45 @@ def drawbody(bpart):
         turtle.pencolor("red")
         turtle.write("You lose", font=("Arial", 30, "normal"))
         time.sleep(1.5)
-        
+    
+def makeguess(realword, setup, guess):  #realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
+    guessl = [] # makes a list of the guess
 
+    realwordlist = [i for i in realword]  # makes a list of 'realword'
+    if setup == True: 
+        for i in range(0, len(realword)):
+            guessl.append("-")
+            return stringconvert(guessl)
+    if setup == False:
+        for i in realwordlist:
+            if guess == i:
+                guessl.append(i)
+            else:
+                guessl.append("-")
+        score.write(stringconvert(realwordlist))
+            
+def stringconvert(word):
+    fword = ""
+    for i in word:
+        fword += i
+    return fword
+
+def personinput():
+    pinput = str(turtle.textinput("Hangman", "Enter a letter: "))
+    if pinput == "" or None:
+        personinput()
+    else:
+        return pinput
+    
 def game():
-    score = turtle.Turtle()
+    
+    # sets up the game
+
+
     turtle.reset()
     turtle.clearscreen()
     setup()
     lives = 6
-
-    
 
 
     # makes list with word
@@ -100,25 +127,35 @@ def game():
     for i in makeword():
         finalword.append(i)
         guessword = guessword + (i)
+    
 
-    for i in range(0, len(guessword)):
-        guessl.append("-")
-    #Figgure out how to join this into a string
-        
+
+    # makes the blank word
+    blank = makeguess(guessword, True, None)
+    
+    score.write(blank) 
     
     # Asks for input for first letter
-    while finalword != []:
-        pinput = turtle.textinput("Hangman", "Enter a letter: ")
-
-        if pinput in finalword:  # if letter is in word
-            finalword = finalword.remove(pinput)
-            score.clear()
-            score.write("Current found: " + guess, font=("Arial", 30, "normal"))
+    while finalword:
+        
+        pinput = personinput()
+        
+        if pinput in finalword:
+            finalword.remove(pinput)
+            makeguess(guessword, False, pinput)
             
-
-        elif pinput not in finalword:  # if the letter is not in the word
-            print("wrong")
-            lives = lives - 1
+            if not finalword:
+                turtle.penup()
+                turtle.home()
+                turtle.backward(55)
+                turtle.pendown()
+                turtle.pencolor("green")
+                turtle.write("You win", font=("Arial", 30, "normal"))
+                time.sleep(1.5)
+                game()
+            
+        else:
+            lives -= 1
             if lives == 0:
                 drawbody(0)
                 game()
