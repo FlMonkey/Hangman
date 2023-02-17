@@ -4,6 +4,15 @@ import turtle
 import random
 import time
 import tkinter as tk
+import socket
+
+
+import socket
+
+HOST = ''  # empty string means this socket can accept connections from any available network interface
+PORT = 8968
+
+message = "notworking"
 
 finalword = []
 input_text = ""
@@ -61,6 +70,55 @@ def setup():
     # makes the blank word
     makeguess(guessword, True, None)
 
+
+
+def recive():
+    global message
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print('Connected by', addr)
+            while True:
+                data = conn.recv(1024)
+                if not data:
+                    break
+                message = data.decode()
+                print(f"Received message: {message}")
+
+
+def send():
+    def multisubmit():
+        global multitext
+        multitext = multinput_box.get()
+        input_box.delete(0, 'end')
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            s.sendall(multitext.encode())
+            data = s.recv(1024)
+            print('Received', repr(data))
+            
+    multinput_box = tk.Entry(root)
+    multinput_box.pack()
+    
+    multisubmit_button = tk.Button(root, text="Enter", command=multisubmit())
+    multisubmit_button.pack()
+    
+    
+
+
+    
+
+def multi():
+    send_button = tk.Button(root, text="Send word?", command=send)
+    send_button.pack()
+    
+    recive_button = tk.Button(root, text="Recive word?", command=recive)
+    recive_button.pack()
+
+
 # Create an input box
 input_box = tk.Entry(root)
 input_box.pack()
@@ -71,6 +129,10 @@ enter_button.pack()
 
 start_button = tk.Button(root, text="Start/Restart", command=setup)
 start_button.pack()
+
+multi_button = tk.Button(root, text="Multiplayer", command=multi)
+multi_button.pack()
+
 
 # Create a Turtle window
 canvas = turtle.Canvas(root, width=1000, height=500)
@@ -102,12 +164,22 @@ with open("words.txt", "r") as file:
     words = list(map(str, allText.split()))
 
 def makeword():
-    while True:
-        global x
-        x = random.choice(words)
-        if len(x) > 3 and len(x) <= 8:
-            print(x)
-            return (x)
+    global x
+    global message
+    '''
+    if message == "":
+        while True:
+            global x
+            x = random.choice(words)
+            if len(x) > 3 and len(x) <= 8:
+                print(x)
+                return (x)
+    else:
+        
+    '''
+    x = message
+    return message
+
 
 def drawbody(bpart):
     global usedlets
