@@ -90,6 +90,7 @@ def recive():
                     guessword = guessword + (i)
 
 
+
 def send():
     def multisubmit():
         global multitext
