@@ -68,9 +68,7 @@ def setup():
     finalword = []
     guessword = ("")
     guessl = []
-    for i in makeword():
-        finalword.append(i)
-        guessword = guessword + (i)
+    
 
     # makes the blank word
     makeguess(guessword, True, None)
@@ -79,6 +77,7 @@ def setup():
 
 def recive():
     global message
+    global final
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
@@ -91,6 +90,9 @@ def recive():
                     break
                 message = data.decode()
                 print(f"Received message: {message}")
+                for i in makeword():
+                finalword.append(i)
+                guessword = guessword + (i)
 
 def send():
     def multisubmit():
@@ -168,22 +170,9 @@ with open("words.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
 
-def makeword():
-    global x
-    global message
-    '''
-    if message == "":
-        while True:
-            global x
-            x = random.choice(words)
-            if len(x) > 3 and len(x) <= 8:
-                print(x)
-                return (x)
-    else:
-        
-    '''
-    x = message
-    return message
+def makeword(message):
+    helloooo = message
+    return helloooo
 
 
 def drawbody(bpart):
