@@ -5,12 +5,13 @@ import random
 import time
 import tkinter as tk
 import socket
+import threading
 
-
-import socket
+yyy = 0
 
 HOST = ''  # empty string means this socket can accept connections from any available network interface
-PORT = 8968
+PORT = 65433
+
 
 message = "notworking"
 
@@ -34,7 +35,11 @@ def setup():
     global guessl
     global usedlets
     global hiddenusedlets
-    
+    global thread
+    global thread2
+    thread = threading.Thread(target=recive)
+    thread2 = threading.Thread(target=send)
+
     usedletters.clear()
     hang.reset()
     hang.clear()
@@ -87,35 +92,34 @@ def recive():
                 message = data.decode()
                 print(f"Received message: {message}")
 
-
 def send():
     def multisubmit():
         global multitext
+        
         multitext = multinput_box.get()
-        input_box.delete(0, 'end')
+        multinput_box.delete(0, 'end')
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
             s.sendall(multitext.encode())
             data = s.recv(1024)
             print('Received', repr(data))
-            
+    
     multinput_box = tk.Entry(root)
     multinput_box.pack()
     
-    multisubmit_button = tk.Button(root, text="Enter", command=multisubmit())
+    multisubmit_button = tk.Button(root, text="Enter Multi", command=multisubmit)
     multisubmit_button.pack()
     
-    
-
-
+    multitext = multinput_box.get()
+    multinput_box.delete(0, 'end')
     
 
 def multi():
-    send_button = tk.Button(root, text="Send word?", command=send)
+    send_button = tk.Button(root, text="Send word?", command=thread2.start)
     send_button.pack()
     
-    recive_button = tk.Button(root, text="Recive word?", command=recive)
+    recive_button = tk.Button(root, text="Recive word?", command=thread.start)
     recive_button.pack()
 
 
@@ -136,6 +140,7 @@ multi_button.pack()
 
 # Create a Turtle window
 canvas = turtle.Canvas(root, width=1000, height=500)
+
 canvas.pack()
 
 usedletters = turtle.RawTurtle(canvas)
@@ -314,6 +319,10 @@ def game():
             usedletters.write(usedlets, font=("Verdana", 20, "normal"))
             
             # draw hangman
+
+if yyy == 0:
+    setup()
+    yyy = yyy + 1
 
 root.mainloop()
 
