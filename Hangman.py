@@ -26,7 +26,9 @@ def submit():
     input_text = input_box.get()
     print("User entered:", input_text)
     input_box.delete(0, 'end')
+    evoy(input_text)
     game()  # Clear the input box
+    
 
 
 def setup():
@@ -38,7 +40,7 @@ def setup():
     global hiddenusedlets
     global thread
     global thread2
-    thread = threading.Thread(target=recive)
+    thread = threading.Thread(target=receive)
     thread2 = threading.Thread(target=send)
 
     usedletters.clear()
@@ -77,8 +79,10 @@ def setup():
     makeguess(guessword, True, None)
 
 
-def recive():
+def receive():
+
     global message
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
@@ -92,12 +96,15 @@ def recive():
                 message = data.decode()
                 print(f"Received message: {message}")
                 setup()
+                recv_thread = threading.Thread(target=recoi)
+                recv_thread.start()
+
 
 def send():
     def multisubmit():
 
         global multitext
-        
+
         multitext = multinput_box.get()
         multinput_box.delete(0, 'end')
 
@@ -107,6 +114,7 @@ def send():
             data = s.recv(1024)
             print('Received', repr(data))
 
+
     multinput_box = tk.Entry(root)
     multinput_box.pack()
 
@@ -114,8 +122,37 @@ def send():
         root, text="Enter Multi", command=multisubmit)
     multisubmit_button.pack()
 
-    multitext = multinput_box.get()
     multinput_box.delete(0, 'end')
+
+
+def evoy(data):
+    # Create a TCP/IP socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Connect to the server
+        s.connect((HOST, PORT))
+        # Send the data
+        s.sendall(data.encode())
+
+
+def recoi():
+    # Create a TCP/IP socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Bind the socket to the port
+        s.bind((HOST, PORT))
+        # Listen for incoming connections
+        s.listen()
+        while True:
+            # Wait for a client to connect
+            conn, addr = s.accept()
+            with conn:
+                while True:
+                    # Receive the data
+                    data = conn.recv(1024)
+                    if not data:
+                        # If no more data is received, break out of the loop
+                        break
+                    # Print the received data
+                    print(data.decode())
 
 
 def multi():
