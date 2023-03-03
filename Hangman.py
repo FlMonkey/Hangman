@@ -91,6 +91,7 @@ def recive():
                     break
                 message = data.decode()
                 print(f"Received message: {message}")
+                setup()
 
 def send():
     def multisubmit():
