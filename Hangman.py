@@ -91,9 +91,6 @@ def recive():
                     break
                 message = data.decode()
                 print(f"Received message: {message}")
-                setup()
-
-                
 
 def send():
     def multisubmit():
@@ -106,26 +103,8 @@ def send():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
             s.sendall(multitext.encode())
-
-            while True:
-                # Wait for socket to become readable
-                ready, _, _ = select.select([s], [], [], 1.0)
-
-                if ready:
-                    # Receive data from the socket
-                    data = s.recv(1024)
-
-                    if not data:
-                        # Server has closed the connection
-                        break
-
-                    print('Received:', repr(data))
-                    # do something with the received data here
-                    break
-                else:
-                    # Socket is not ready yet
-                    print('Waiting for response...')
-
+            data = s.recv(1024)
+            print('Received', repr(data))
 
     multinput_box = tk.Entry(root)
     multinput_box.pack()
