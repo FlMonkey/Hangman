@@ -6,7 +6,7 @@ import time
 import tkinter as tk
 import socket
 import threading
-import select
+
 yyy = 0
 
 HOST = ''  # empty string means this socket can accept connections from any available network interface
@@ -69,7 +69,7 @@ def setup():
     finalword = []
     guessword = ("")
     guessl = []
-    for i in makeword(message):
+    for i in makeword():
         finalword.append(i)
         guessword = guessword + (i)
 
@@ -91,12 +91,9 @@ def recive():
                     break
                 message = data.decode()
                 print(f"Received message: {message}")
-                s.connect((HOST, PORT))
-                s.sendall(message.encode())
                 setup()
 
                 
-
 
 def send():
     def multisubmit():
@@ -109,8 +106,25 @@ def send():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
             s.sendall(multitext.encode())
-            data = s.recv(1024)
-            print('Received', repr(data))
+
+            while True:
+                # Wait for socket to become readable
+                ready, _, _ = select.select([s], [], [], 1.0)
+
+                if ready:
+                    # Receive data from the socket
+                    data = s.recv(1024)
+
+                    if not data:
+                        # Server has closed the connection
+                        break
+
+                    print('Received:', repr(data))
+                    # do something with the received data here
+                    break
+                else:
+                    # Socket is not ready yet
+                    print('Waiting for response...')
 
 
     multinput_box = tk.Entry(root)
@@ -178,8 +192,9 @@ with open("words.txt", "r") as file:
     words = list(map(str, allText.split()))
 
 
-def makeword(mess):
-    return mess
+def makeword():
+    global x
+    global message
     '''
     if message == "":
         while True:
@@ -191,6 +206,8 @@ def makeword(mess):
     else:
         
     '''
+    x = message
+    return message
 
 
 def drawbody(bpart):
