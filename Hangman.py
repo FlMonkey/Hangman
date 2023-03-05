@@ -1,18 +1,10 @@
 
 # initialise the program
-import turtle
-import random
-import time
-import tkinter as tk
-import socket
-import threading
-
-
+import turtle, random, time, tkinter as tk, socket, threading
 
 HOST = ''  # empty string means this socket can accept connections from any available network interface
 PORT = 1432
 PORT1 = 1435
-
 
 multip = False
 yyy = 0
@@ -23,7 +15,6 @@ input_text = ""
 
 root = tk.Tk()
 
-
 def submit():
     global input_text
     input_text = input_box.get()
@@ -32,8 +23,6 @@ def submit():
     if multip == True:
         evoy(input_text)
     game()  # Clear the input box
-    
-
 
 def setup():
     global lives
@@ -82,7 +71,6 @@ def setup():
     # makes the blank word
     makeguess(guessword, True, None)
 
-
 def receive():
 
     global message
@@ -103,8 +91,6 @@ def receive():
                 conn.sendall(response.encode())
                 s.close()
                 setup()
-                
-
 
 def send():
     def multisubmit():
@@ -135,7 +121,6 @@ def send():
 
     multinput_box.delete(0, 'end')
 
-
 def evoy(data):
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -143,7 +128,6 @@ def evoy(data):
         s.connect((HOST, PORT1))
         # Send the data
         s.sendall(data.encode())
-
 
 def recoi():
     global input_text
@@ -167,7 +151,6 @@ def recoi():
                     input_text = data.decode()
                     game()
 
-
 def multi():
     global multip
     multip = True
@@ -176,7 +159,6 @@ def multi():
 
     recive_button = tk.Button(root, text="Recive word?", command=thread.start)
     recive_button.pack()
-
 
 # Create an input box
 input_box = tk.Entry(root)
@@ -191,7 +173,6 @@ start_button.pack()
 
 multi_button = tk.Button(root, text="Multiplayer", command=multi)
 multi_button.pack()
-
 
 # Create a Turtle window
 canvas = turtle.Canvas(root, width=1000, height=500)
@@ -211,18 +192,15 @@ guessl = []
 usedlets = ("")
 hiddenusedlets = ("")
 
-
 usedletters.penup()
 usedletters.hideturtle()
 usedletters.forward(-300)
 
 root.bind('<Return>', lambda event: submit())
 
-
 with open("words.txt", "r") as file:
     allText = file.read()
     words = list(map(str, allText.split()))
-
 
 def makeword():
     global x
@@ -235,7 +213,6 @@ def makeword():
             return (x)
     else:
         return message
-
 
 def drawbody(bpart):
     global usedlets
@@ -285,7 +262,6 @@ def drawbody(bpart):
 
 # realword needs to be a string, setup is a boolean and guess is a string. This function will make the word with the filled in '-'
 
-
 def makeguess(realword, setup, guess):
     # makes a list of the guess
     global guessl
@@ -305,13 +281,11 @@ def makeguess(realword, setup, guess):
         guessl = newguessl
         score.write(stringconvert(guessl), font=("Verdana", 20, "normal"))
 
-
 def stringconvert(word):
     fword = ""
     for i in word:
         fword += i
     return fword
-
 
 def game():
     global hiddenusedlets
@@ -370,12 +344,9 @@ def game():
 
             # draw hangman
 
-
 if yyy == 0:
     setup()
     yyy = yyy + 1
 
 root.mainloop()
 
-
-# draw the hangman
