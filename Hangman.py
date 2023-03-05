@@ -10,7 +10,8 @@ import threading
 yyy = 0
 
 HOST = ''  # empty string means this socket can accept connections from any available network interface
-PORT = 65433
+PORT = 1432
+PORT1 = 1435
 
 
 message = "notworking"
@@ -95,9 +96,11 @@ def receive():
                     break
                 message = data.decode()
                 print(f"Received message: {message}")
+                response = "Data received successfully"
+                conn.sendall(response.encode())
+                s.close()
                 setup()
-                recv_thread = threading.Thread(target=recoi)
-                recv_thread.start()
+                
 
 
 def send():
@@ -113,6 +116,9 @@ def send():
             s.sendall(multitext.encode())
             data = s.recv(1024)
             print('Received', repr(data))
+            s.close()
+            recv_thread = threading.Thread(target=recoi)
+            recv_thread.start()
 
 
     multinput_box = tk.Entry(root)
@@ -129,7 +135,7 @@ def evoy(data):
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Connect to the server
-        s.connect((HOST, PORT))
+        s.connect((HOST, PORT1))
         # Send the data
         s.sendall(data.encode())
 
@@ -138,7 +144,7 @@ def recoi():
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Bind the socket to the port
-        s.bind((HOST, PORT))
+        s.bind((HOST, PORT1))
         # Listen for incoming connections
         s.listen()
         while True:
