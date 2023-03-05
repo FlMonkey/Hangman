@@ -107,9 +107,11 @@ def send():
     def multisubmit():
 
         global multitext
-
+        global message
         multitext = multinput_box.get()
         multinput_box.delete(0, 'end')
+        message = multitext
+        setup()
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((HOST, PORT))
@@ -141,6 +143,7 @@ def evoy(data):
 
 
 def recoi():
+    global input_text
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Bind the socket to the port
@@ -158,7 +161,8 @@ def recoi():
                         # If no more data is received, break out of the loop
                         break
                     # Print the received data
-                    print(data.decode())
+                    input_text = data.decode()
+                    game()
 
 
 def multi():
