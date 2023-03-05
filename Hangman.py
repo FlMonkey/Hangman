@@ -7,14 +7,16 @@ import tkinter as tk
 import socket
 import threading
 
-yyy = 0
+
 
 HOST = ''  # empty string means this socket can accept connections from any available network interface
 PORT = 1432
 PORT1 = 1435
 
 
-message = "notworking"
+multip = False
+yyy = 0
+message = ""
 
 finalword = []
 input_text = ""
@@ -27,7 +29,8 @@ def submit():
     input_text = input_box.get()
     print("User entered:", input_text)
     input_box.delete(0, 'end')
-    evoy(input_text)
+    if multip == True:
+        evoy(input_text)
     game()  # Clear the input box
     
 
@@ -166,6 +169,8 @@ def recoi():
 
 
 def multi():
+    global multip
+    multip = True
     send_button = tk.Button(root, text="Send word?", command=thread2.start)
     send_button.pack()
 
@@ -222,19 +227,14 @@ with open("words.txt", "r") as file:
 def makeword():
     global x
     global message
-    '''
+    
     if message == "":
-        while True:
-            global x
-            x = random.choice(words)
-            if len(x) > 3 and len(x) <= 8:
-                print(x)
-                return (x)
+
+        x = random.choice(words)
+        if len(x) > 3 and len(x) <= 8:
+            return (x)
     else:
-        
-    '''
-    x = message
-    return message
+        return message
 
 
 def drawbody(bpart):
