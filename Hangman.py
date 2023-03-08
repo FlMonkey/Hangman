@@ -5,6 +5,7 @@ import turtle, random, time, tkinter as tk, socket, threading
 HOST = ''  # empty string means this socket can accept connections from any available network interface
 PORT = 1432
 PORT1 = 1435
+HOST1 = "192.168.0.247"  #Enter IPv4 of your friend (needs to be on the same network)
 
 multip = False
 yyy = 0
@@ -89,7 +90,7 @@ def receive():
                 print(f"Received message: {message}")
                 response = "Data received successfully"
                 conn.sendall(response.encode())
-                s.close()
+                
                 setup()
 
 def send():
@@ -103,7 +104,7 @@ def send():
         setup()
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
+            s.connect((HOST1, PORT))
             s.sendall(multitext.encode())
             data = s.recv(1024)
             print('Received', repr(data))
@@ -125,7 +126,7 @@ def evoy(data):
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Connect to the server
-        s.connect((HOST, PORT1))
+        s.connect((HOST1, PORT1))
         # Send the data
         s.sendall(data.encode())
 
