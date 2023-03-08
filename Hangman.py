@@ -5,7 +5,7 @@ import turtle, random, time, tkinter as tk, socket, threading
 HOST = ''  # empty string means this socket can accept connections from any available network interface
 PORT = 1432
 PORT1 = 1435
-HOST1 = "192.168.0.247"  #Enter IPv4 of your friend (needs to be on the same network)
+HOST1 = ""  #Enter IPv4 of your friend (needs to be on the same network)
 
 multip = False
 yyy = 0
